@@ -1,0 +1,44 @@
+<?php
+/**
+ * 宅建問題出題システム設定ファイル（サンプル）
+ * このファイルをconfig.phpにコピーして設定を変更してください
+ */
+
+// Basic認証設定
+define('AUTH_USERNAME', 'your-email@example.com');
+define('AUTH_PASSWORD', 'your-password');
+
+// OpenAI API設定
+define('OPENAI_API_KEY', 'your-openai-api-key-here');
+define('OPENAI_MODEL', 'gpt-4o-mini');
+
+// データベース設定
+define('DB_PATH', __DIR__ . '/questions.db');
+
+// システム設定
+define('DEBUG_MODE', false);
+define('LOG_DIR', __DIR__ . '/logs');
+define('SYSTEM_NAME', '宅建問題出題システム');
+
+// セッション設定
+define('SESSION_TIMEOUT', 3600); // 1時間
+
+// ページング設定
+define('QUESTIONS_PER_PAGE', 1);
+
+// ログレベル
+define('LOG_LEVEL_ERROR', 'ERROR');
+define('LOG_LEVEL_INFO', 'INFO');
+define('LOG_LEVEL_DEBUG', 'DEBUG');
+
+// タイムゾーン設定
+date_default_timezone_set('Asia/Tokyo');
+
+// エラー表示設定
+if (DEBUG_MODE) {
+    error_reporting(E_ALL);
+    ini_set('display_errors', 1);
+} else {
+    error_reporting(0);
+    ini_set('display_errors', 0);
+}
