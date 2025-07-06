@@ -47,7 +47,7 @@ class AIHelper {
     private static function buildPrompt($questionText, $userQuestion) {
         // 空の質問の場合はデフォルトの解説を要求
         if (empty(trim($userQuestion))) {
-            $userQuestion = "中学生でも簡単に分かるように問題を解説しなおして";
+            $userQuestion = "問題を解説しなおして";
         }
         
         $prompt = "以下は宅地建物取引士資格試験の問題です。\n\n";
@@ -55,7 +55,7 @@ class AIHelper {
         $prompt .= $questionText . "\n\n";
         $prompt .= "【質問】\n";
         $prompt .= $userQuestion . "\n\n";
-        $prompt .= "上記の問題について、わかりやすく丁寧に回答してください。";
+        $prompt .= "上記の問題について、予備校の先生みたいに、まず端的に答えを教えて。そして、興味を持ってもらえるように実例を含めて、受講者にわかりやすいよう、口語体で説明してください。最後に、文中の宅建の用語について、簡単に説明して";
         
         return $prompt;
     }
