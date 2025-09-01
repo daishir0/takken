@@ -30,8 +30,8 @@ try {
     
     $historyId = $input['history_id'] ?? '';
     
-    if (empty($historyId)) {
-        throw new Exception('履歴IDが指定されていません');
+    if (empty($historyId) || !is_numeric($historyId)) {
+        throw new Exception('履歴IDが不正です');
     }
     
     Logger::info("質問履歴削除開始: ID={$historyId}");

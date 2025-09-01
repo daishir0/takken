@@ -190,8 +190,8 @@ async function askAI(userQuestion) {
             // 質問入力欄をクリア
             document.getElementById('ai-question-input').value = '';
 
-            // 履歴に追加
-            addToQuestionHistory(userQuestion, data.response, data.timestamp);
+            // 履歴に追加（保存された履歴IDを反映）
+            addToQuestionHistory(userQuestion, data.response, data.timestamp, data.history_id);
 
             // 成功通知
             showNotification('AI回答を取得しました', 'success');
@@ -427,6 +427,11 @@ async function saveAnswerHistory(questionId, userAnswer, correctAnswer) {
  */
 async function deleteQuestionHistory(historyId, historyItem) {
     try {
+        // 保存直後でID未付与の場合のガード
+        if (!/^\d+$/.test(String(historyId))) {
+            showNotification('この履歴はまだ保存が完了していません', 'warning');
+            return;
+        }
         const response = await fetch('api/delete_history.php', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
@@ -467,7 +472,7 @@ async function deleteQuestionHistory(historyId, historyItem) {
 /**
  * 質問履歴を動的に追加
  */
-function addToQuestionHistory(userQuestion, aiResponse, timestamp) {
+function addToQuestionHistory(userQuestion, aiResponse, timestamp, historyId = null) {
     let historySection = document.querySelector('.question-history');
     
     // 履歴セクションが存在しない場合は作成
@@ -501,7 +506,7 @@ function addToQuestionHistory(userQuestion, aiResponse, timestamp) {
     historyItem.innerHTML = `
         <div class="history-header">
             <div class="history-date">${formattedDate}</div>
-            <button class="delete-history-btn" data-history-id="new" title="この履歴を削除">×</button>
+            <button class="delete-history-btn" data-history-id="${historyId ? historyId : 'new'}" title="この履歴を削除">×</button>
         </div>
         <div class="history-question">
             <strong>質問:</strong> ${userQuestion.replace(/\n/g, '<br>')}

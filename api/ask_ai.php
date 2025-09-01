@@ -57,9 +57,9 @@ try {
     $executionTime = $aiResult['execution_time'];
     
     // 質問履歴をデータベースに保存
-    $saveResult = $db->saveQuestionHistory($questionId, $userQuestion, $aiResponse);
+    $historyId = $db->saveQuestionHistory($questionId, $userQuestion, $aiResponse);
     
-    if (!$saveResult) {
+    if (!$historyId) {
         Logger::error("質問履歴の保存に失敗: 問題ID={$questionId}");
     }
     
@@ -69,6 +69,7 @@ try {
         'response' => $aiResponse,
         'execution_time' => $executionTime,
         'question_id' => $questionId,
+        'history_id' => $historyId ?: null,
         'timestamp' => date('Y-m-d H:i:s')
     ], JSON_UNESCAPED_UNICODE);
     

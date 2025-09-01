@@ -109,8 +109,9 @@ class Database {
         try {
             $stmt = $this->pdo->prepare("INSERT INTO question_history (question_id, user_question, ai_response, created_at) VALUES (?, ?, ?, ?)");
             $stmt->execute([$question_id, $user_question, $ai_response, date('Y-m-d H:i:s')]);
+            $id = (int)$this->pdo->lastInsertId();
             Logger::log("AI質問履歴保存: 問題ID={$question_id}", LOG_LEVEL_INFO);
-            return true;
+            return $id ?: false;
         } catch (PDOException $e) {
             Logger::log('AI質問履歴保存エラー: ' . $e->getMessage(), LOG_LEVEL_ERROR);
             return false;
