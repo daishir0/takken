@@ -503,10 +503,11 @@ function addToQuestionHistory(userQuestion, aiResponse, timestamp, historyId = n
                          String(date.getHours()).padStart(2, '0') + ':' +
                          String(date.getMinutes()).padStart(2, '0');
     
+    const hasNumericId = historyId && /^\d+$/.test(String(historyId));
     historyItem.innerHTML = `
         <div class="history-header">
             <div class="history-date">${formattedDate}</div>
-            <button class="delete-history-btn" data-history-id="${historyId ? historyId : 'new'}" title="この履歴を削除">×</button>
+            ${hasNumericId ? `<button class="delete-history-btn" data-history-id="${historyId}" title="この履歴を削除">×</button>` : ``}
         </div>
         <div class="history-question">
             <strong>質問:</strong> ${userQuestion.replace(/\n/g, '<br>')}

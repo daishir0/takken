@@ -7,12 +7,12 @@ class AIHelper {
     /**
      * OpenAI APIに質問を送信
      */
-    public static function askQuestion($questionText, $userQuestion, $questionId = null) {
+    public static function askQuestion($questionText, $userQuestion, $questionId = null, $correctAnswerNumber = null) {
         $startTime = microtime(true);
         
         try {
             // プロンプトを構築
-            $prompt = self::buildPrompt($questionText, $userQuestion);
+            $prompt = self::buildPrompt($questionText, $userQuestion, $correctAnswerNumber);
             
             // OpenAI APIリクエスト
             $response = self::callOpenAI($prompt);
@@ -44,7 +44,7 @@ class AIHelper {
     /**
      * プロンプトを構築
      */
-    private static function buildPrompt($questionText, $userQuestion) {
+    private static function buildPrompt($questionText, $userQuestion, $correctAnswerNumber = null) {
         // 空の質問の場合はデフォルトの解説を要求
         if (empty(trim($userQuestion))) {
             $userQuestion = "問題を解説しなおして";
@@ -53,6 +53,10 @@ class AIHelper {
         $prompt = "以下は宅地建物取引士資格試験の問題です。\n\n";
         $prompt .= "【問題】\n";
         $prompt .= $questionText . "\n\n";
+        if (!is_null($correctAnswerNumber) && $correctAnswerNumber !== '') {
+            $prompt .= "【解答（正答番号）】\n";
+            $prompt .= $correctAnswerNumber . " 番\n\n";
+        }
         $prompt .= "【質問】\n";
         $prompt .= $userQuestion . "\n\n";
         $prompt .= "上記の問題について、予備校の先生みたいに、まず端的に答えを教えて。そして、興味を持ってもらえるように実例を含めて、受講者にわかりやすいよう、口語体で説明してください。最後に、文中の宅建の用語について、簡単に説明して";

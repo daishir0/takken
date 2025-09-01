@@ -46,8 +46,11 @@ try {
     
     Logger::info("AI質問開始: 問題ID={$questionId}, 質問=" . substr($userQuestion, 0, 50));
     
-    // AIに質問
-    $aiResult = AIHelper::askQuestion($question['question_text'], $userQuestion, $questionId);
+    // 正答番号を取得（整数化）
+    $correctAnswerNumber = isset($question['answer_text']) ? intval($question['answer_text']) : null;
+
+    // AIに質問（正答番号をプロンプトに含める）
+    $aiResult = AIHelper::askQuestion($question['question_text'], $userQuestion, $questionId, $correctAnswerNumber);
     
     if (!$aiResult['success']) {
         throw new Exception($aiResult['error']);
@@ -58,18 +61,20 @@ try {
     
     // 質問履歴をデータベースに保存
     $historyId = $db->saveQuestionHistory($questionId, $userQuestion, $aiResponse);
-    
+
+    // 保存に失敗した場合はエラーとして扱う（未確定IDをUIに出さない）
     if (!$historyId) {
         Logger::error("質問履歴の保存に失敗: 問題ID={$questionId}");
+        throw new Exception('質問履歴の保存に失敗しました');
     }
-    
-    // レスポンスを返す
+
+    // レスポンスを返す（成功時は必ず数値のhistory_idを含む）
     echo json_encode([
         'success' => true,
         'response' => $aiResponse,
         'execution_time' => $executionTime,
         'question_id' => $questionId,
-        'history_id' => $historyId ?: null,
+        'history_id' => $historyId,
         'timestamp' => date('Y-m-d H:i:s')
     ], JSON_UNESCAPED_UNICODE);
     

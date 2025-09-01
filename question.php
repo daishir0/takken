@@ -156,6 +156,6 @@ try {
             choices: <?php echo json_encode($parsedQuestion['choices'], JSON_UNESCAPED_UNICODE); ?>
         };
     </script>
-    <script src="assets/js/question.js"></script>
+    <script src="assets/js/question.js?v=<?php echo filemtime(__DIR__ . '/assets/js/question.js'); ?>"></script>
 </body>
 </html>
